@@ -4,30 +4,30 @@ import (
 	"database/sql"
 	"log"
 
-	//"os"
-
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 )
+
+// Package db provides database initialization and connection management
+// It uses SQLite as the database engine
 
 var DB *sql.DB
 
 func Init() {
 	var err error
-	DB, err = sql.Open("sqlite3", "./items.db")
+	DB, err = sql.Open("sqlite", "./items.db") // Open a connection to the SQLite database
+	// The database file is named items.db and is located in the current directory
 	if err != nil {
-		log.Fatalf("Failed to connect to database: %v", err)
+		log.Fatal("Failed to connect to database:", err) // Initialize the database connection
 	}
+
 	createTable := `
 	CREATE TABLE IF NOT EXISTS items (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,	
-	name TEXT NOT NULL,
-	price REAL NOT NULL,
-	
-);`
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		name TEXT NOT NULL,
+		price REAL NOT NULL
+	);`
 	_, err = DB.Exec(createTable)
-
 	if err != nil {
-		log.Fatalf("Failed to create table: %v", err)
+		log.Fatal("Failed to create table:", err)
 	}
-
 }
